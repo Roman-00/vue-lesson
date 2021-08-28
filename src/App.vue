@@ -4,32 +4,14 @@
 
         <div class="container">
 
-            <form>
-                <h4>Add a new Post</h4>
-                
-                <input 
-                    v-bind:value="title"
-                    @input="title = $event.target.value"
-                    class="input" 
-                    type="text" 
-                    placeholder="Title"
-                >
+            <post-form
+                @create="createPost"
+            />
 
-                <input 
-                    v-bind:value="body"
-                    @input="body = $event.target.value"
-                    class="input" 
-                    type="text" 
-                    placeholder="Description"
-                >
-
-                <button class="btn" @click="createPost">Add Post</button>
-            </form>
-
-            <div class="post" v-for="post in posts">
-                <div class="post__title"><strong>Title:</strong> {{ post.title }}</div>
-                <div class="post__description"><strong>Description:</strong> {{ post.body }}</div>
-            </div>
+            <post-list 
+                :posts="posts"
+                @remove="removePost"
+            />
 
         </div>
 
@@ -38,21 +20,29 @@
 </template>
 
 <script>
+import PostForm from '@/components/PostForm'
+import PostList from '@/components/PostList'
+
 export default {
+    components: {
+        PostForm,
+        PostList
+    },
     data() {
         return {
             posts: [
                 {id: 1, title: 'Post as JavaScript', body: 'JavaScript a programming language'},
                 {id: 2, title: 'Post as JavaScript 2', body: 'JavaScript a programming language 2'},
                 {id: 3, title: 'Post as JavaScript 3', body: 'JavaScript a programming language 3'}
-            ],
-            title: '',
-            body: ''
+            ]
         }
     },
     methods: {
-        createPost() {
-
+        createPost(post) {
+            this.posts.push(post);
+        },
+        removePost(post) {
+            this.posts = this.posts.filter(p => p.id !== post.id)
         }
     }
 }
@@ -68,25 +58,4 @@ export default {
 .container
     max-width: 1100px
     margin: 0 auto;
-
-.post
-    padding: 15px
-    margin-top: 15px
-    border: 2px solid teal
-.input
-    width: 100%
-    margin-top: 15px
-    padding: 10px 15px
-    border:  1px solid teal
-form
-    display: flex
-    flex-direction: column
-.btn
-    align-self: flex-end
-    margin-top: 15px
-    padding: 10px 15px
-    background: none
-    color: teal
-    border: 1px solid teal
-    cursor: pointer
 </style>
